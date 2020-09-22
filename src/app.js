@@ -1,7 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 
- const { v4: uuid } = require('uuid');
+const {
+  v4: uuid
+} = require('uuid');
 
 const app = express();
 
@@ -11,40 +13,99 @@ app.use(cors());
 const repositories = [];
 
 app.get("/repositories", (request, response) => {
-  // TODO
   return response.json(repositories);
 });
 
 app.post("/repositories", (request, response) => {
-  // TODO
   // title, url e techs - body
   // { id: "uuid", title: 'Desafio Node.js', url: 'http://github.com/...', techs: ["Node.js", "..."], likes: 0}
 
-  const { title, url, techs } = request.body;
-  const data = {id: uuid(), title, techs, likes: 0, url};
-  const ident = uuid();
-  console.log(ident)
-  
+  const {
+    title,
+    url,
+    techs
+  } = request.body;
+  const data = {
+    id: uuid(),
+    title,
+    techs,
+    likes: 0,
+    url
+  };
+
   repositories.push(data);
 
   return response.json(data);
 });
 
 app.put("/repositories/:id", (request, response) => {
-  // TODO
   // title, a url e as techs
-  const { id } = request.params;
-  console.log(id)
+  const {
+    id
+  } = request.params;
+  const {
+    title,
+    url,
+    techs
+  } = request.body;
 
-  const repositorie = repositories.findIndex(repositorie => repositorie.id === id)
+  console.log(id);
+
+  const repositorieIndex = repositories.findIndex(repositorie => repositorie.id === id)
+
+  if (repositorieIndex < 0) {
+    return response.status(400).json({
+      error: "ID nao encontrado."
+    })
+  }
+
+  const likes = repositories[repositorieIndex].likes;
+
+  const data = {
+    id,
+    title,
+    url,
+    techs,
+    likes
+  }
+  repositories[repositorieIndex] = data;
+
+  return response.json(data);
 });
 
 app.delete("/repositories/:id", (request, response) => {
-  // TODO
+  const {
+    id
+  } = request.params;
+
+  const repositorieIndex = repositories.findIndex(repositorie => repositorie.id === id)
+
+  if (repositorieIndex < 0) {
+    return response.status(400).json({
+      error: "ID nao encontrado."
+    })
+  }
+
+  repositories.splice(repositorieIndex, 1);
+
+  return response.status(204).send();
 });
 
 app.post("/repositories/:id/like", (request, response) => {
   // TODO
+  const {
+    id
+  } = request.params;
+  const repositorieIndex = repositories.findIndex(repositorie => repositorie.id === id)
+
+  if (repositorieIndex < 0) {
+    return response.status(400).json({
+      error: "ID nao encontrado."
+    })
+  }
+  repositories[repositorieIndex].likes += 1;
+
+  return response.json(repositories[repositorieIndex])
 });
 
 module.exports = app;
