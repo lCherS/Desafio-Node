@@ -99,7 +99,7 @@ app.post("/repositories/:id/like", (request, response) => {
 
   let repository = repositories.find(repository => repository.id === id)
   
-  if (repository < 0) {
+  if (!repository) {
     return response.status(400).json({
       error: "ID nao encontrado."
     })
