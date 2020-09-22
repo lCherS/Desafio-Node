@@ -96,16 +96,18 @@ app.post("/repositories/:id/like", (request, response) => {
   const {
     id
   } = request.params;
-  const repositorieIndex = repositories.findIndex(repositorie => repositorie.id === id)
 
-  if (repositorieIndex < 0) {
+  let repository = repositories.find(repository => repository.id === id)
+  
+  if (repository < 0) {
     return response.status(400).json({
       error: "ID nao encontrado."
     })
   }
-  repositories[repositorieIndex].likes += 1;
 
-  return response.json(repositories[repositorieIndex])
+  repository.likes += 1;
+
+  return response.json(repository)
 });
 
 module.exports = app;
