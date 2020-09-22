@@ -21,9 +21,9 @@ app.post("/repositories", (request, response) => {
   // { id: "uuid", title: 'Desafio Node.js', url: 'http://github.com/...', techs: ["Node.js", "..."], likes: 0}
 
   const { title, url, techs } = request.body;
-  const data = {id: uuid, title, techs, likes: 0, url};
-  
-  console.log(data)
+  const data = {id: uuid(), title, techs, likes: 0, url};
+  const ident = uuid();
+  console.log(ident)
   
   repositories.push(data);
 
@@ -33,6 +33,10 @@ app.post("/repositories", (request, response) => {
 app.put("/repositories/:id", (request, response) => {
   // TODO
   // title, a url e as techs
+  const { id } = request.params;
+  console.log(id)
+
+  const repositorie = repositories.findIndex(repositorie => repositorie.id === id)
 });
 
 app.delete("/repositories/:id", (request, response) => {
